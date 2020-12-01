@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="theme-color" content="#000000">
+    <!--
+      manifest.json provides metadata used when your web app is added to the
+      homescreen on Android. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="/manifest.json">
+    <style>
+      body, div, p {
+        font-family: sans-serif;
+      }
+
+      #myDropzone {
+        width: 400px;
+        margin: auto;
+      }
+
+      .main {
+        margin: auto;
+        width: 80%;
+      }
+    </style>
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <title>React App</title>
+    {{ dropzone.load_css() }}
+
+  </head>
+  <body>
+    <noscript>
+      You need to enable JavaScript to run this app.
+    </noscript>
+    {{ dropzone.load_js() }}
+    {{ dropzone.config(redirect_url=url_for('index')) }}
+
+<div class='main'>
+
+  <h1>Dokumenten Klassifikation</h1>
+
+    <div id="root"></div>
+
+
+    <table>
+      {% for file in files %}
+        <tr>
+            <td>{{ file['name'] }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+    <h3>1. Datei hochladen:</h3>
+
+    {{ dropzone.create(action='/ocr') }}
+    <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
+
+    <h3>2. Erkannter Text:</h3>
+
+    <div style="margin: auto; text-align: center;">
+      <textarea style="width: 100%" rows="20" cols="100">{{ text }}</textarea>
+    </div>
+
+    {% if word_vector %}
+    <p>
+      <b>Wort-Vektor:</b>  <code>{{ word_vector }}</code>
+    </p>
+    <p>
+      <b>Wort-Dimensionen:</b>
+      <code>{{ words }}</code>
+    </p>
+    {% endif %}
+
+    {% if saved_file %}
+    <h3>3. Kategorie zuweisen</h3>
+    <form action="/tag-file" method="post">
+      <input type="hidden" name="filename" value="{{ saved_file }}">
+      <table>
+        <tr>
+          <td>
+            Datei wurde gespeichert als <span class="filename">{{ saved_file }}</span>
+          </td>
+          <td>
+              <select name="tag">
+                  <option value="Studium">studium</option>
+                  <option value="Rechnung">rechnung</option>
+              </select>
+              <input type="submit" value="Klasse setzen">
+          </td>
+      </tr>
+    </table>
+    </form>
+    <p>
+    </p>
+    {% endif %}
+</div>
+  </body>
+</html>

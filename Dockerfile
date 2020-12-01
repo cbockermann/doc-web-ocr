@@ -14,9 +14,10 @@ COPY test/test-document.png /docweb/incoming
 ADD docweb /docweb
 COPY app.py /
 RUN python3 -m venv env
-RUN . env/bin/activate && pip install opencv-python flask pillow
-RUN . env/bin/activate && pip install pytesseract
+RUN . env/bin/activate && pip install opencv-python flask flask_dropzone pillow
+RUN . env/bin/activate && pip install pytesseract 
 COPY run.sh /run.sh
+ADD templates /templates
 RUN chmod 777 /run.sh
 
 ENTRYPOINT ["/run.sh"]
